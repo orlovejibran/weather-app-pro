@@ -5,7 +5,6 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve files from the public folder
 app.use(express.static('public'));
 
 app.get('/weather', async (req, res) => {
@@ -17,15 +16,10 @@ app.get('/weather', async (req, res) => {
     try {
         const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${weatherKey}`;
         const weatherRes = await axios.get(weatherUrl);
-        
-        // We only send weather data. The frontend handles the "Unlimited" images.
         res.json(weatherRes.data);
     } catch (error) {
-        console.error("Weather API Error:", error.message);
-        res.status(500).json({ error: "City not found or API error" });
+        res.status(404).json({ error: "City not found" });
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
