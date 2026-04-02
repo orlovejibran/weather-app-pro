@@ -1,18 +1,27 @@
 const searchBtn = document.getElementById('searchBtn');
 const cityInput = document.getElementById('cityInput');
 let rotationTimer; 
-let currentCity = ""; // Track the city globally
+let clockTimer;
+
+// Function to update Time and Date
+function updateDateTime() {
+    const now = new Date();
+    const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+    
+    document.getElementById('date').innerText = now.toLocaleDateString('en-GB', options);
+    document.getElementById('time').innerText = now.toLocaleTimeString('en-GB', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        second: '2-digit'
+    });
+}
 
 async function startWeatherApp(city) {
-    // 1. Clear old timer immediately so images don't mix
     if (rotationTimer) clearInterval(rotationTimer);
     
-    currentCity = city; 
-
     const fetchData = async () => {
         try {
-            // We use the global currentCity so the timer stays synced
-            const response = await fetch(`/weather?city=${currentCity}`);
+            const response = await fetch(`/weather?city=${city}`);
             const data = await response.json();
 
             if (data.error) {
@@ -21,7 +30,7 @@ async function startWeatherApp(city) {
                 return;
             }
 
-            // UI Updates
+            // Update UI
             document.getElementById('cityName').innerText = data.name;
             document.getElementById('temp').innerText = `${Math.round(data.main.temp)}°C`;
             document.getElementById('desc').innerText = data.weather[0].description;
@@ -32,25 +41,24 @@ async function startWeatherApp(city) {
             document.getElementById('weatherIcon').src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
 
             if (data.backgroundImage) {
-                document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${data.backgroundImage}')`;
+                document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url('${data.backgroundImage}')`;
             }
         } catch (err) {
             console.error(err);
         }
     };
 
-    // Run once immediately
     await fetchData();
-
-    // Start 10-second rotation for the NEW city
     rotationTimer = setInterval(fetchData, 10000);
 }
 
+// Start the clock immediately
+setInterval(updateDateTime, 10000);
+updateDateTime();
+
 searchBtn.addEventListener('click', () => {
     const city = cityInput.value.trim();
-    if (city) {
-        startWeatherApp(city);
-    }
+    if (city) startWeatherApp(city);
 });
 
 cityInput.addEventListener('keypress', (e) => {

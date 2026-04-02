@@ -3,29 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkyCast Pro</title>
+    <title>SkyCast Pro | Jibran</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="search-box">
-            <input type="text" id="cityInput" placeholder="Enter city...">
-            <button id="searchBtn">Search</button>
+    <div class="main-wrapper">
+        <div class="datetime-container">
+            <p id="date">-- -- ----</p>
+            <h2 id="time">00:00:00</h2>
         </div>
-        <div class="weather-info">
-            <h2 id="cityName">SkyCast Pro</h2>
-            <img id="weatherIcon" src="" alt="">
-            <p id="desc">Ready for search...</p>
-            <h1 id="temp">--°C</h1>
-        </div>
-        <div class="details">
-            <div class="col">
-                <p>Humidity</p>
-                <p id="humidity">--%</p>
+
+        <div class="container">
+            <div class="search-box">
+                <input type="text" id="cityInput" placeholder="Search city...">
+                <button id="searchBtn">Go</button>
             </div>
-            <div class="col">
-                <p>Wind</p>
-                <p id="wind">-- km/h</p>
+
+            <div class="weather-info">
+                <h2 id="cityName">SkyCast</h2>
+                <img id="weatherIcon" src="" alt="">
+                <p id="desc">Enter a location</p>
+                <h1 id="temp">--°C</h1>
+            </div>
+
+            <div class="details">
+                <div class="col">
+                    <p>Humidity</p>
+                    <p id="humidity">--%</p>
+                </div>
+                <div class="col">
+                    <p>Wind</p>
+                    <p id="wind">-- km/h</p>
+                </div>
             </div>
         </div>
     </div>

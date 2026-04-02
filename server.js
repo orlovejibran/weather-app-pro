@@ -20,21 +20,15 @@ app.get('/weather', async (req, res) => {
 
         let imageUrl = "";
         try {
-            // Added landscape and city tags to make sure the AI finds the right place
             const unsplashUrl = `https://api.unsplash.com/photos/random?query=${city},city,landscape&client_id=${unsplashKey}`;
             const unsplashRes = await axios.get(unsplashUrl);
             imageUrl = unsplashRes.data.urls.regular;
-        } catch (e) {
-            imageUrl = null;
-        }
+        } catch (e) { imageUrl = null; }
 
-        res.json({
-            ...weatherRes.data,
-            backgroundImage: imageUrl
-        });
+        res.json({ ...weatherRes.data, backgroundImage: imageUrl });
     } catch (error) {
         res.status(404).json({ error: "City not found" });
     }
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server live on ${PORT}`));
