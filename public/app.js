@@ -5,19 +5,18 @@ let rotationTimer;
 async function startWeatherApp(city) {
     if (rotationTimer) clearInterval(rotationTimer);
 
-    document.getElementById('cityName').innerText = "Loading...";
-
-    const updateWeatherOnly = async () => {
+    const updateAll = async () => {
         try {
             const response = await fetch(`/weather?city=${city}`);
             const data = await response.json();
 
             if (data.error) {
-                alert("City not found! Check your spelling (e.g., Yaounde).");
-                document.getElementById('cityName').innerText = "SkyCast Pro";
-                return false;
+                alert("City not found!");
+                clearInterval(rotationTimer);
+                return;
             }
 
+            // UI Updates
             document.getElementById('cityName').innerText = data.name;
             document.getElementById('temp').innerText = `${Math.round(data.main.temp)}°C`;
             document.getElementById('desc').innerText = data.weather[0].description;
@@ -26,32 +25,21 @@ async function startWeatherApp(city) {
             
             const icon = data.weather[0].icon;
             document.getElementById('weatherIcon').src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-            return true;
+
+            // Update Background with your API image
+            if (data.backgroundImage) {
+                document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${data.backgroundImage}')`;
+            }
         } catch (err) {
             console.error(err);
-            return false;
         }
     };
 
-    const rotateBackground = () => {
-        // We are using a new "Unlimited" source since Unsplash Source is down.
-        // This generates a random high-quality image of the city you searched.
-        const randomSig = Math.floor(Math.random() * 1000);
-        const imageUrl = `https://loremflickr.com/1600/900/${city},landscape/all?sig=${randomSig}`;
-        
-        const img = new Image();
-        img.src = imageUrl;
-        img.onload = () => {
-            document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${imageUrl}')`;
-        };
-    };
+    // Run immediately
+    await updateAll();
 
-    const success = await updateWeatherOnly();
-    if (success) {
-        rotateBackground();
-        // Change image every 10 seconds
-        rotationTimer = setInterval(rotateBackground, 10000);
-    }
+    // Rotate every 10 seconds (Remember: this uses 1 credit per 10 seconds)
+    rotationTimer = setInterval(updateAll, 10000);
 }
 
 searchBtn.addEventListener('click', () => {
