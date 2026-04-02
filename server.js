@@ -1,40 +1,41 @@
-import express from 'express';
-import axios from 'axios';
-import dotenv from 'dotenv';
+const express = require('express');
+const axios = require('axios');
+const path = require('path');
+require('dotenv').config();
 
-dotenv.config();
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(express.static('public'));
-app.use(express.json());
 
-// Get Weather Data
-app.get('/api/weather', async (req, res) => {
+app.get('/weather', async (req, res) => {
     const city = req.query.city;
-    const apiKey = process.env.WEATHER_API_KEY;
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+    const weatherKey = process.env.afd63ec82f206113b9c0870fc49e58ff;
+    const unsplashKey = process.env.AK7b0n3Y5BFWMCl8txlrAeNQPkjxxzKc4wAZ3LJAXOY;
+
     try {
-        const response = await axios.get(url);
-        res.json(response.data);
+        // 1. Get Weather Data
+        const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${weatherKey}`;
+        const weatherResponse = await axios.get(weatherUrl);
+        const weatherData = weatherResponse.data;
+
+        // 2. Get Background Image from Unsplash
+        const unsplashUrl = `https://api.unsplash.com/photos/random?query=${city},landscape&client_id=${unsplashKey}`;
+        const unsplashResponse = await axios.get(unsplashUrl);
+        const imageUrl = unsplashResponse.data.urls.regular;
+
+        // 3. Send EVERYTHING back to the frontend
+        res.json({
+            ...weatherData,
+            backgroundImage: imageUrl
+        });
+
     } catch (error) {
-        res.status(404).json({ message: "City not found" });
+        console.error("Error fetching data:", error.message);
+        res.status(500).json({ error: "Could not fetch data" });
     }
 });
 
-// Get Random Image - Added "sig" parameter to prevent browser caching the same image
-app.get('/api/image', async (req, res) => {
-    const city = req.query.city;
-    const accessKey = process.env.UNSPLASH_ACCESS_KEY;
-    const randomSig = Math.random(); // Forces a fresh image fetch
-    const url = `https://api.unsplash.com/photos/random?query=${city},landscape&client_id=${accessKey}&sig=${randomSig}`;
-
-    try {
-        const response = await axios.get(url);
-        res.json({ imageUrl: response.data.urls.regular });
-    } catch (error) {
-        res.json({ imageUrl: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b' });
-    }
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 App running at http://localhost:${PORT}`));
