@@ -6,49 +6,42 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve the static files (HTML, CSS, JS) from the 'public' folder
 app.use(express.static('public'));
 
 app.get('/weather', async (req, res) => {
     const city = req.query.city;
-    const weatherKey = process.env.afd63ec82f206113b9c0870fc49e58ff;
-    const unsplashKey = process.env.AK7b0n3Y5BFWMCl8txlrAeNQPkjxxzKc4wAZ3LJAXOY;
+    const weatherKey = process.env.WEATHER_API_KEY;
+    const unsplashKey = process.env.UNSPLASH_ACCESS_KEY;
 
-    // Check if city is provided
-    if (!city) {
-        return res.status(400).json({ error: "City is required" });
+    // DEBUGGING: This will show in your Railway Logs
+    console.log("Searching for:", city);
+    console.log("Weather Key exists?:", !!weatherKey); 
+
+    if (!weatherKey) {
+        return res.status(500).json({ error: "Server missing WEATHER_API_KEY" });
     }
 
     try {
-        // 1. Fetch Weather Data from OpenWeatherMap
         const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${weatherKey}`;
         const weatherResponse = await axios.get(weatherUrl);
-        const weatherData = weatherResponse.data;
-
-        // 2. Fetch Random Background Image from Unsplash
+        
         let imageUrl = "";
         try {
             const unsplashUrl = `https://api.unsplash.com/photos/random?query=${city},landscape&client_id=${unsplashKey}`;
             const unsplashResponse = await axios.get(unsplashUrl);
             imageUrl = unsplashResponse.data.urls.regular;
-        } catch (unsplashError) {
-            console.log("Unsplash Image failed, using default color.");
-            imageUrl = null; // App will fall back to CSS background
+        } catch (e) {
+            imageUrl = null;
         }
 
-        // 3. Send combined data back to your app.js
-        res.json({
-            ...weatherData,
-            backgroundImage: imageUrl
-        });
+        res.json({ ...weatherResponse.data, backgroundImage: imageUrl });
 
     } catch (error) {
-        console.error("Server Error:", error.message);
+        console.error("API Error Status:", error.response ? error.response.status : "No Response");
         res.status(500).json({ error: "City not found or API error" });
     }
 });
 
-// Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server started on port ${PORT}`);
 });
