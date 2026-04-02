@@ -1,78 +1,93 @@
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 body {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #0f172a; 
+    background: #0f172a no-repeat center center fixed;
     background-size: cover;
-    background-position: center;
-    transition: background 0.8s ease-in-out;
+    font-family: 'Poppins', sans-serif;
+    transition: background-image 1.2s ease-in-out;
+    padding: 20px;
 }
 
-.app-container { width: 100%; height: 100%; display: flex; align-items: center; padding-left: 5%; }
-
-.glass-sidebar {
-    background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 40px;
-    width: 420px;
-    min-height: 80vh;
-    border-radius: 30px;
+.container {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-.glass-sidebar h2 span { color: #00d4ff; font-weight: 300; }
-
-.search-box { margin-top: 30px; display: flex; gap: 10px; }
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
 
 input {
     flex: 1;
-    padding: 15px;
+    padding: 12px 15px;
     border-radius: 12px;
     border: none;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
     outline: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1rem;
 }
 
+input::placeholder { color: rgba(255, 255, 255, 0.6); }
+
 button {
-    padding: 0 20px;
+    padding: 12px 20px;
     border-radius: 12px;
     border: none;
-    background: #00d4ff;
-    color: #0f172a;
-    font-weight: 600;
+    background: #38bdf8;
+    color: white;
+    font-weight: 700;
     cursor: pointer;
     transition: 0.3s;
 }
 
-button:hover { background: white; transform: scale(1.05); }
+button:hover { background: #0ea5e9; }
 
-#date-time-container { margin-top: 40px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 15px; }
+.weather-info h2 { font-size: 1.8rem; margin-bottom: 5px; }
+.weather-info p { opacity: 0.8; font-size: 0.9rem; }
 
-#dateText { font-size: 0.8rem; color: #00d4ff; letter-spacing: 2px; text-transform: uppercase; }
+#temp {
+    font-size: 4.5rem;
+    font-weight: 700;
+    margin: 15px 0;
+}
 
-#timeText { font-size: 2rem; font-weight: 600; margin-top: 5px; }
+.details {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-.temp-section { display: flex; align-items: center; margin-top: 20px; gap: 20px; }
+.col p:first-child { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+.col p:last-child { font-weight: 700; font-size: 1.1rem; }
 
-#temp { font-size: 5rem; font-weight: 600; }
-
-#weatherIcon { width: 80px; filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5)); }
-
-#cityName { font-size: 1.5rem; margin-top: 10px; }
-
-#description { font-size: 0.9rem; opacity: 0.7; letter-spacing: 1px; }
-
-.details { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-.detail-item { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 15px; }
-
-.detail-item span { display: block; font-size: 0.6rem; color: #00d4ff; letter-spacing: 1px; margin-bottom: 5px; }
-
-.hidden { display: none; }
+/* MOBILE FIXES */
+@media (max-width: 480px) {
+    .container { padding: 20px; }
+    #temp { font-size: 3.5rem; }
+    .search-box { flex-direction: column; }
+    button { width: 100%; }
+}
