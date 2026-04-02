@@ -3,44 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkyCast Pro | Real-Time Weather</title>
+    <title>SkyCast Pro | Victory Academy</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="app-container">
-        <div class="glass-sidebar">
-            <h2>SkyCast <span>Pro</span></h2>
-            
-            <div class="search-box">
-                <input type="text" id="cityInput" placeholder="Enter City (e.g. Bamenda)">
-                <button id="searchBtn">GO</button>
+    <div class="container">
+        <div class="search-box">
+            <input type="text" id="cityInput" placeholder="Enter city name...">
+            <button id="searchBtn">Search</button>
+        </div>
+
+        <div class="weather-info">
+            <h2 id="cityName">--</h2>
+            <img id="weatherIcon" src="" alt="">
+            <p id="desc">Waiting for search...</p>
+            <h1 id="temp">--°C</h1>
+        </div>
+
+        <div class="details">
+            <div class="col">
+                <p>Humidity</p>
+                <p id="humidity">--%</p>
             </div>
-
-            <div id="weather-info" class="hidden">
-                <div id="date-time-container">
-                    <p id="dateText"></p>
-                    <h3 id="timeText"></h3>
-                </div>
-
-                <div class="temp-section">
-                    <h1 id="temp">--°C</h1>
-                    <img id="weatherIcon" src="" alt="icon">
-                </div>
-
-                <p id="cityName"></p>
-                <p id="description"></p>
-
-                <div class="details">
-                    <div class="detail-item">
-                        <span>HUMIDITY</span>
-                        <b id="humidity">--%</b>
-                    </div>
-                    <div class="detail-item">
-                        <span>WIND SPEED</span>
-                        <b id="wind">-- km/h</b>
-                    </div>
-                </div>
+            <div class="col">
+                <p>Wind Speed</p>
+                <p id="wind">-- km/h</p>
             </div>
         </div>
     </div>
