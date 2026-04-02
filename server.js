@@ -20,7 +20,7 @@ app.get('/weather', async (req, res) => {
 
         let imageUrl = "";
         try {
-            const unsplashUrl = `https://api.unsplash.com/photos/random?query=${city},city,landscape&client_id=${unsplashKey}`;
+            const unsplashUrl = `https://api.unsplash.com/photos/random?query=${city},landscape,city&client_id=${unsplashKey}`;
             const unsplashRes = await axios.get(unsplashUrl);
             imageUrl = unsplashRes.data.urls.regular;
         } catch (e) { imageUrl = null; }

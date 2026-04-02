@@ -1,24 +1,34 @@
 const searchBtn = document.getElementById('searchBtn');
 const cityInput = document.getElementById('cityInput');
 let rotationTimer; 
-let clockTimer;
+let clockInterval;
 
-// Function to update Time and Date
-function updateDateTime() {
-    const now = new Date();
-    const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-    
-    document.getElementById('date').innerText = now.toLocaleDateString('en-GB', options);
-    document.getElementById('time').innerText = now.toLocaleTimeString('en-GB', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        second: '2-digit'
-    });
+function updateCityTime(timezoneOffset) {
+    if (clockInterval) clearInterval(clockInterval);
+
+    const tick = () => {
+        // Calculate the time in the specific city using the offset (seconds)
+        const now = new Date();
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const cityTime = new Date(utc + (1000 * timezoneOffset));
+
+        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        document.getElementById('date').innerText = cityTime.toLocaleDateString('en-GB', options);
+        document.getElementById('time').innerText = cityTime.toLocaleTimeString('en-GB', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+    };
+
+    tick();
+    clockInterval = setInterval(tick, 1000);
 }
 
 async function startWeatherApp(city) {
     if (rotationTimer) clearInterval(rotationTimer);
-    
+
     const fetchData = async () => {
         try {
             const response = await fetch(`/weather?city=${city}`);
@@ -26,11 +36,13 @@ async function startWeatherApp(city) {
 
             if (data.error) {
                 alert("City not found!");
-                clearInterval(rotationTimer);
                 return;
             }
 
-            // Update UI
+            // 1. Update Time & Date using the city's timezone offset
+            updateCityTime(data.timezone);
+
+            // 2. Update Weather UI
             document.getElementById('cityName').innerText = data.name;
             document.getElementById('temp').innerText = `${Math.round(data.main.temp)}°C`;
             document.getElementById('desc').innerText = data.weather[0].description;
@@ -40,8 +52,10 @@ async function startWeatherApp(city) {
             const icon = data.weather[0].icon;
             document.getElementById('weatherIcon').src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
 
+            // 3. Update Background (Desktop and Phone fix)
             if (data.backgroundImage) {
-                document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url('${data.backgroundImage}')`;
+                const imgUrl = data.backgroundImage;
+                document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('${imgUrl}')`;
             }
         } catch (err) {
             console.error(err);
@@ -51,10 +65,6 @@ async function startWeatherApp(city) {
     await fetchData();
     rotationTimer = setInterval(fetchData, 10000);
 }
-
-// Start the clock immediately
-setInterval(updateDateTime, 10000);
-updateDateTime();
 
 searchBtn.addEventListener('click', () => {
     const city = cityInput.value.trim();
