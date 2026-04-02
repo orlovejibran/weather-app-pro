@@ -11,17 +11,19 @@ body {
     font-family: 'Poppins', sans-serif;
     color: white;
     padding: 20px;
+    transition: background-image 2s ease-in-out; /* This makes the image swap smooth */
 }
 
 .container {
     width: 100%;
     max-width: 400px;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(15px);
     border-radius: 25px;
     padding: 30px;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 .search-box {
@@ -33,27 +35,43 @@ body {
 input {
     flex: 1;
     padding: 12px;
-    border-radius: 10px;
+    border-radius: 12px;
     border: none;
     background: rgba(255, 255, 255, 0.2);
     color: white;
+    outline: none;
 }
 
 button {
-    padding: 12px 18px;
-    border-radius: 10px;
+    padding: 12px 20px;
+    border-radius: 12px;
     border: none;
     background: #0ea5e9;
     color: white;
     cursor: pointer;
     font-weight: bold;
+    transition: 0.3s;
 }
 
-#temp { font-size: 4rem; margin: 10px 0; }
-.details { display: flex; justify-content: space-around; margin-top: 20px; }
-.col p { margin: 5px 0; font-size: 0.9rem; }
+button:hover { background: #38bdf8; }
 
-@media (max-width: 400px) {
+#cityName { font-size: 1.8rem; margin-top: 10px; }
+#temp { font-size: 4.5rem; margin: 10px 0; font-weight: 700; }
+#desc { text-transform: capitalize; opacity: 0.8; margin-bottom: 20px; }
+
+.details {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.col p { margin: 5px 0; font-size: 0.9rem; }
+.col p:last-child { font-weight: bold; font-size: 1.1rem; }
+
+@media (max-width: 450px) {
+    .container { padding: 20px; }
     .search-box { flex-direction: column; }
-    #temp { font-size: 3rem; }
+    button { width: 100%; }
 }

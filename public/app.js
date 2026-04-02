@@ -3,10 +3,11 @@ const cityInput = document.getElementById('cityInput');
 let rotationTimer; 
 
 async function startWeatherApp(city) {
-    // Stop any old timers if the user searches a new city
+    // Clear any previous timers
     if (rotationTimer) clearInterval(rotationTimer);
 
-    const updateUI = async () => {
+    // 1. Function to update weather data
+    const updateWeatherOnly = async () => {
         try {
             const response = await fetch(`/weather?city=${city}`);
             const data = await response.json();
@@ -17,31 +18,40 @@ async function startWeatherApp(city) {
                 return;
             }
 
-            // Update Text Data
+            // Update the UI text
             document.getElementById('cityName').innerText = data.name;
             document.getElementById('temp').innerText = `${Math.round(data.main.temp)}°C`;
             document.getElementById('desc').innerText = data.weather[0].description;
             document.getElementById('humidity').innerText = `${data.main.humidity}%`;
             document.getElementById('wind').innerText = `${data.wind.speed} km/h`;
             
-            // Update Icon
+            // Update the icon
             const icon = data.weather[0].icon;
             document.getElementById('weatherIcon').src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-
-            // Update Background
-            if (data.backgroundImage) {
-                document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${data.backgroundImage}')`;
-            }
         } catch (err) {
-            console.error("Fetch error:", err);
+            console.error("Weather fetch error:", err);
         }
     };
 
-    // Run immediately
-    await updateUI();
+    // 2. Function to rotate the background image (Unlimited Source)
+    const rotateBackground = () => {
+        const randomSig = Math.floor(Math.random() * 10000);
+        // This URL searches for your specific city!
+        const imageUrl = `https://source.unsplash.com/featured/1600x900?${city},city,landscape&sig=${randomSig}`;
+        
+        const img = new Image();
+        img.src = imageUrl;
+        img.onload = () => {
+            document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${imageUrl}')`;
+        };
+    };
 
-    // Start 10-second rotation for the background
-    rotationTimer = setInterval(updateUI, 10000);
+    // Initialize
+    await updateWeatherOnly();
+    rotateBackground();
+
+    // Set the 10-second loop
+    rotationTimer = setInterval(rotateBackground, 10000);
 }
 
 searchBtn.addEventListener('click', () => {
